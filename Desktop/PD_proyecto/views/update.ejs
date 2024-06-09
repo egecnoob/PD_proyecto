@@ -1,0 +1,68 @@
+<!-- update.ejs -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Destination</title>
+</head>
+<body>
+    <h1>Update Destination</h1>
+    <form id="updateform" onsubmit="update(event)">
+        <label for="nombre_destino">Nombre Destino:</label>
+        <input type="text" id="nombre_destino" name="nombre_destino" value="<%= destino.nombre_destino %>">
+        <br>
+        <label for="descripcion">Descripción:</label>
+        <textarea id="descripcion" name="descripcion"><%= destino.descripcion %></textarea>
+        <br>
+        <label for="ubicacion">Ubicación:</label>
+        <input type="text" id="ubicacion" name="ubicacion" value="<%= destino.ubicacion %>">
+        <br>
+        <label for="atracciones_principales">Atracciones Principales:</label>
+        <input type="text" id="atracciones_principales" name="atracciones_principales" value="<%= destino.atracciones_principales %>">
+        <br>
+        <label for="imagenes_destino">Imágenes Destino:</label>
+        <input type="text" id="imagenes_destino" name="imagenes_destino" value="<%= destino.imagenes_destino %>">
+        <br>
+        <button type="submit">Editar Destino</button>
+    </form>
+
+    <script>
+        function update(event) {
+            console.log('update function called');
+            event.preventDefault();
+
+            // Prepare form data
+            const formData = new FormData(document.getElementById('updateform'));
+
+            // Convert formData to JSON object
+            const jsonData = {};
+            formData.forEach((value, key) => { jsonData[key] = value });
+
+            fetch(`/update/${<%= destino.id %>}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(jsonData)
+            })
+            .then(response => {
+                if (response.ok) {
+                    console.log('Destination updated successfully.');
+                    window.location.href = '/admin';
+                } else {
+                    // Handle error response
+                    return response.json().then(error => {
+                        throw new Error(error.message || 'Failed to update destination');
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error.message);
+                // Display error message to the user (e.g., using alert or showing an error message on the page)
+            });
+        }
+    </script>
+</body>
+</html>

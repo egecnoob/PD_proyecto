@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+   <meta charset="utf-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+   <link rel="stylesheet" href="css/bootstrap.css">
+   <link rel="stylesheet" type="text/css" href="css/style.css">
+   <link href="https://fonts.googleapis.com/css?family=Poppins:600&display=swap" rel="stylesheet">
+   <!-- <link rel="stylesheet" href="css/all.min.css"> -->
+   <!-- <link rel="stylesheet" href="css/fontawesome.min.css"> -->
+   <link href="https://tresplazas.com/web/img/big_punto_de_venta.png" rel="shortcut icon">
+   <title>Registro</title>
+</head>
+
+<body>
+   <img class="wave" src="img/wave.png">
+   <div class="container">
+      <div class="img">
+         <img src="img/bg.svg">
+      </div>
+      <div class="login-content">
+         <form method="post" action="">
+            <img src="img/avatar.svg">
+            <h2 class="title">REGISTRARSE</h2>
+
+            <div class="input-div">
+                <div class="i">
+                    <i class="fas fa-user"></i>
+                 </div>
+                 <div class="div">
+                    <h5>Nombres</h5>
+                    <input type="text" class="input" name="nombres">
+                    <% if (errors && errors.nombres) { %>
+                        <p class="error-message"><%= errors.nombres %></p>
+                    <% } else { %>
+                        <p class="guide-message">Ingrese su nombre completo.</p>
+                    <% } %>
+                </div>
+            </div>
+
+            <div class="input-div">
+               <div class="i">
+                  <i class="fas fa-user"></i>
+               </div>
+               <div class="div">
+                  <h5>Apellidos</h5> <!-- Cambiado de "Apellido" a "Apellidos" -->
+                  <input type="text" class="input" name="apellidos"> <!-- Cambiado de "apellido" a "apellidos" -->
+                  <% if (errors && errors.apellidos) { %>
+                      <p class="error-message"><%= errors.apellidos %></p>
+                  <% } else { %>
+                      <p class="guide-message">Ingrese sus apellidos.</p>
+                  <% } %>
+               </div>
+            </div>
+
+            <div class="input-div">
+               <div class="i">
+                  <i class="fas fa-user"></i>
+               </div>
+               <div class="div">
+                  <h5>Usuario</h5>
+                  <input type="text" class="input" name="usuario">
+                  <% if (errors && errors.usuario) { %>
+                      <p class="error-message"><%= errors.usuario %></p>
+                  <% } else { %>
+                      <p class="guide-message">Ingrese su nombre de usuario.</p>
+                  <% } %>
+               </div>
+            </div>
+
+            <div class="input-div">
+               <div class="i">
+                  <i class="fas fa-lock"></i>
+               </div>
+               <div class="div">
+                  <h5>Contraseña</h5>
+                  <input type="password" class="input" name="clave">
+                  <% if (errors && errors.clave) { %>
+                      <p class="error-message"><%= errors.clave %></p>
+                  <% } else { %>
+                      <p class="guide-message">Ingrese una contraseña de al menos 6 caracteres.</p>
+                  <% } %>
+               </div>
+            </div>
+
+            <div class="input-div">
+               <div class="i">
+                  <i class="fas fa-phone"></i>
+               </div>
+               <div class="div">
+                  <h5>Número Documento</h5>
+                  <input type="text" class="input" name="numero">
+                  <% if (errors && errors.numero) { %>
+                      <p class="error-message"><%= errors.numero %></p>
+                  <% } else { %>
+                      <p class="guide-message">Ingrese su número de documento (mínimo 7 dígitos).</p>
+                  <% } %>
+               </div>
+            </div>
+
+            <div class="input-div">
+               <div class="i">
+                  <i class="fas fa-phone"></i>
+               </div>
+               <div class="div">
+                  <h5>Teléfono</h5>
+                  <input type="text" class="input" name="telefono">
+                  <% if (errors && errors.telefono) { %>
+                      <p class="error-message"><%= errors.telefono %></p>
+                  <% } else { %>
+                      <p class="guide-message">Ingrese su número de teléfono (9 dígitos).</p>
+                  <% } %>
+               </div>
+            </div>
+
+            <div class="input-div">
+               <div class="i">
+                  <i class="fas fa-envelope"></i>
+               </div>
+               <div class="div">
+                  <h5>Correo electrónico</h5>
+                  <input type="email" class="input" name="correo">
+                  <% if (errors && errors.correo) { %>
+                      <p class="error-message"><%= errors.correo %></p>
+                  <% } else { %>
+                      <p class="guide-message">Ingrese su correo electrónico válido.</p>
+                  <% } %>
+               </div>
+            </div>
+
+            <input name="btningresar" class="btn" type="submit" value="REGISTRARSE">
+         </form>
+      </div>
+   </div>
+   <script src="js/fontawesome.js"></script>
+   <script src="js/main.js"></script>
+   <script src="js/main2.js"></script>
+   <script src="js/jquery.min.js"></script>
+   <script src="js/bootstrap.js"></script>
+   <script src="js/bootstrap.bundle.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Display <%= tableName %> Table</title>
+  <style>
+    html, body {
+      margin: 0px;
+      padding: 0px;
+      height: 100%;
+      width: 100%;
+      font-family: Arial, sans-serif;
+    }
+
+    .crud-buttons {
+      display: flex;
+      justify-content: center;
+    }
+    .crud-button {
+      margin: 2 px;
+      padding: 5px 10px; /* Added padding for better button appearance */
+      border: none;
+      background-color: #4382ef;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    .crud-button:hover {
+      background-color: #3c68b4;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.4);
+    }
+
+    .modal-content {
+      background-color: #fefefe;
+      margin: 15% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 80%;
+    }
+
+    .close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    .close:hover,
+    .close:focus {
+      color: black;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .container {
+      display: flex;
+      padding: 0px;
+      margin: 0px;
+      min-height: 100%;
+      height: max-content;
+      width: 100%;
+    }
+
+    .scrollbar {
+      flex: 0 0 auto;
+      width: 200px;
+      min-width: 200px;
+      overflow-x: auto;
+      white-space: nowrap;
+      display: flex;
+      flex-direction: column;
+      background-color: #3c68b4;
+      color: #fefefe;
+    }
+
+    .scrollbar button {
+      display: inline-block;
+      padding: 10px 20px;
+      height: 60px;
+      border: none;
+      background-color: #3c68b4;
+      color: white;
+      cursor: pointer;
+    }
+
+    .scrollbar button:hover {
+      background-color: #4382ef;
+    }
+
+    .tables {
+      flex: 1;
+      padding: 20px;
+      overflow: auto;
+    }
+
+    .top {
+      background-color: #4382ef;
+      color: #fefefe;
+      flex: 0 0 auto;
+      padding: 20px;
+      width: 100%;
+    }
+
+    .content {
+      margin: 0px;
+      width: 100%;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse; /* Collapsed border for better appearance */
+    }
+
+    th, td {
+      border: 1px solid #ddd; /* Added borders for cells */
+      padding: 8px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f2f2f2;
+      color: #333;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f2f2f2; /* Alternate row background */
+    }
+
+    tr:hover {
+      background-color: #ddd; /* Hover effect */
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div class="scrollbar">
+      <h1>Contenido</h1>
+      <button onclick="abrirTable('destinos')">Destinos</button>
+      <button onclick="abrirTable('actividades')">Actividades</button>
+      <button onclick="abrirTable('reservas')">Reservas</button>
+      <button onclick="abrirTable('comentarios')">Comentarios</button>
+      <button onclick="abrirTable('usuarios')">Usuarios</button>
+    </div>
+    <div class="content">
+      <div class="top">
+        <h1>Tabla <%= tableName %></h1>
+        <button class="crud-button" onclick="openAddForm()">Añadir</button>
+      </div>
+      <div class="tables">
+        
+        <div id="addModal" class="modal">
+          <div class="modal-content">
+              <span class="close" onclick="closeAddForm()">&times;</span>
+              <h2>Añadir Nuevo <%= tableName %></h2>
+              <form id="addForm" onsubmit="add(event, '<%= tableName %>')">
+                  <% Object.keys(data[0]).slice(1).forEach(function(key) { %>
+                      <% if (key !== 'fecha_hora') { %> 
+                          <label for="<%= key %>"><%= key %>:</label>
+                          <% if (key === 'descripcion' || key === 'atracciones_principales' || key == 'comentario') { %>
+                              <textarea id="<%= key %>" name="<%= key %>" rows="4" cols="50" required></textarea><br><br>
+                          <% }else if (key == 'costo' || key == 'num_personas' || key == 'puntuacion') { %>
+                            <input type="number" id="<%= key %>" name="<%= key %>" required><br><br>
+                          <% }else if (key == 'duracion') { %>
+                            <input type="time" id="<%= key %>" name="<%= key %>" required><br><br>
+                          <% }else if (key == 'fecha_inicio' || key == 'fecha_fin') { %>
+                            <input type="datetime-local" id="<%= key %>" name="<%= key %>" required><br><br>
+                          <% } else { %>
+                              <input type="text" id="<%= key %>" name="<%= key %>" required><br><br>
+                          <% } %>
+                      <% } %>
+                  <% }); %>
+                  <input type="submit" value="Añadir <%= tableName %>">
+              </form>      
+          </div>    
+
+      </div>
+
+        
+
+        <table>
+          <thead>
+            <tr>
+              <% Object.keys(data[0]).forEach(function(key) { %>
+                <th><%= key %></th>
+              <% }); %>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% data.forEach(function(row) { %>
+              <tr>
+                <% Object.values(row).forEach(function(value) { %>
+                  <td><%= value %></td>
+                <% }); %>
+                <td class="crud-buttons"> 
+                  <button class="crud-button" onclick="openUpdateForm(<%= row.id %>)">Editar</button>
+                  <button class="crud-button" onclick="deleteRow('<%= row.id %>', '<%= tableName %>')">Eliminar</button>
+                </td>
+              </tr>
+
+              <div id="updateModal<%= row.id %>" class="modal">
+                <div class="modal-content">
+                    <span class="close" onclick="closeUpdateForm(<%= row.id %>)">&times;</span>
+                    <h2> Editar <%= tableName %></h2>
+                    <form id="updateForm<%= row.id %>" onsubmit="update(event, '<%= row.id %>', '<%= tableName %>')">
+                        <% Object.keys(data[0]).slice(1).forEach(function(key) { %>
+                            <% if (key !== 'fecha_hora') { %>
+                              <label for="<%= key %>"><%= key %>:</label>
+                            <% if (key === 'descripcion' || key === 'atracciones_principales' || key == 'comentario') { %>
+                              <textarea id="<%= key %>" name="<%= key %>" rows="4" cols="50" required><%= row[key] %></textarea><br><br>
+                            <% }else if (key == 'costo' || key == 'num_personas' || key == 'puntuacion') { %>
+                              <input type="number" id="<%= key %>" name="<%= key %>" value="<%= row[key] %>" required><br><br>
+                            <% }else if (key == 'duracion') { %>
+                              <input type="time" id="<%= key %>" name="<%= key %>" value="<%= row[key] %>" required><br><br>
+                              <% } else if (key == 'fecha_inicio' || key == 'fecha_fin') { %>
+                                <% 
+                                  function formatDate(dateStr) {
+                                    const date = new Date(dateStr);
+                                    const pad = (num) => num.toString().padStart(2, '0');
+                                    const year = date.getFullYear();
+                                    const month = pad(date.getMonth() + 1);
+                                    const day = pad(date.getDate());
+                                    const hours = pad(date.getHours());
+                                    const minutes = pad(date.getMinutes());
+                                    return `${year}-${month}-${day}T${hours}:${minutes}`;
+                                  }
+                                  const dateValue = formatDate(row[key]);
+                                %>
+                                <input type="datetime-local" id="<%= key %>" name="<%= key %>" value="<%= dateValue %>" required><br><br>
+                            <% } else { %>
+                              <input type="text" id="<%= key %>" name="<%= key %>" value="<%= row[key] %>" required><br><br>
+                            <% } %>
+                            <% } %>
+                        <% }); %>
+                        <input type="submit" value="Actualizar <%= tableName %>">
+                    </form>      
+                </div>    
+            </div>
+
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    function openAddForm() {
+        document.getElementById('addModal').style.display = 'block';
+      }
+  
+      function closeAddForm() {
+        document.getElementById('addModal').style.display = 'none';
+      }
+  
+      function add(event, tableName) {
+        console.log('add function called');
+        event.preventDefault();
+
+        const formData = new FormData(document.getElementById('addForm'));
+        const jsonData = {};
+            formData.forEach((value, key) => { jsonData[key] = value });
+
+        fetch(`/add/${tableName}`, { // Pass tableName as a parameter in the URL
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+              body: JSON.stringify(jsonData)
+        })
+        .then(response => {
+            if (response.ok) {
+                console.log('Destination added successfully.');
+                closeAddForm();
+            } else {
+                console.error('Failed to add destination:', response);
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }
+
+  
+  function editRow(id, tableName) {
+    console.log("id: " + id);
+    fetch(`/updatepage/${tableName}/${id}`, { method: 'GET' }) // Pass tableName as a parameter
+      .then(response => {
+        if (response.ok) {
+          console.log('Fetching data for update.');
+          window.location.href = `/updatepage/${tableName}/${id}`;
+        } else {
+          response.text().then(errorMessage => {
+            console.error('Failed to fetch data for update:', errorMessage);
+          }).catch(error => {
+            console.error('Error:', error);
+          });
+        }
+      })
+      .catch(error => console.error('Error:', error));
+  }
+
+  function openUpdateForm(id) {
+    document.getElementById('updateModal'+ id).style.display = 'block';
+  }
+  
+  function closeUpdateForm(id) {
+    document.getElementById('updateModal'+ id).style.display = 'none';
+  }
+
+  function update(event, id, tableName) {
+    console.log('update function called');
+    event.preventDefault();
+
+    const formData = new FormData(document.getElementById('updateForm' + id));
+    const jsonData = {};
+    formData.forEach((value, key) => { jsonData[key] = value });
+
+    console.log(tableName);
+    console.log(id);
+    fetch(`/update/${tableName}/id = ${id}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(jsonData)
+    })
+    .then(response => {
+        if (response.ok) {
+            console.log('Destination updated successfully.');
+            closeUpdateForm(id); // Correct function to close the update form
+            location.reload(); // Reload the page to see the updated data
+        } else {
+            console.error('Failed to update destination:', response);
+        }
+    })
+    .catch(error => console.error('Error:', error));
+  }
+
+  
+  function deleteRow(id, tableName) {
+    fetch(`/delete/${tableName}/${id}`, { method: 'DELETE' }) // Pass tableName as a parameter
+        .then(response => {
+            if (response.ok) {
+                console.log('Destination deleted successfully.');
+                // Reload the page to update the table after deletion
+                location.reload();
+            } else {
+                console.error('Failed to delete destination.');
+            }
+        })
+        .catch(error => console.error('Error:', error));
+  }
+
+  function abrirTable(table) {
+    console.log('abrir tabla called', table)
+    fetch(`/display/${table}`, { method: 'GET' })
+      .then(response => {
+            if (response.ok) {
+              window.location.href = `/display/${table}`;
+            } else {
+                console.error('Failed to load.');
+            }
+        })
+        .catch(error => console.error('Error:', error));
+  }
+  </script>
+  
+
+</body>
+</html>
