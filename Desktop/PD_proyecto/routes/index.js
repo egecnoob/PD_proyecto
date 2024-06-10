@@ -62,6 +62,19 @@ router.get('/display/:table', function(req, res, next) {
 });
 
 
+router.post('/validar_login', function(req, res) {
+  const { usuario, password } = req.body;
+
+  // Simple check for demo purposes
+  if (usuario === 'Admin' && password === 'Admin') {
+    database.selectFrom('usuarios', (data) => {
+      res.render('display_table.ejs', { tableName: 'usuarios', data: data });
+    });
+  } else {
+    res.status(401).send('Usuario incorrecto');
+  }
+});
+
 // DELETE route to delete a destination
 router.delete('/delete/:tableName/:id', (req, res) => {
   const tableName = req.params.tableName;
