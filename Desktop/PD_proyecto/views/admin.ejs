@@ -1,195 +1,102 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Destinos CRUD</title>
-  <!-- Add any additional CSS styles here -->
-  <style>
-    .crud-buttons {
-      display: flex;
-      justify-content: center;
-    }
-    .crud-button {
-      margin: 5px;
-    }
+   <meta charset="utf-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    /* CSS styles for modal */
-    .modal {
-      display: none;
-      position: fixed;
-      z-index: 1;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      overflow: auto;
-      background-color: rgba(0,0,0,0.4);
-    }
-
-    .modal-content {
-      background-color: #fefefe;
-      margin: 15% auto;
-      padding: 20px;
-      border: 1px solid #888;
-      width: 80%;
-    }
-
-    .close {
-      color: #aaa;
-      float: right;
-      font-size: 28px;
-      font-weight: bold;
-    }
-
-    .close:hover,
-    .close:focus {
-      color: black;
-      text-decoration: none;
-      cursor: pointer;
-    }
-  </style>
+   <link rel="stylesheet" href="/css/bootstrap.min.css" />
+   <link rel="stylesheet" type="text/css" href="stylesheets/style.css">
+   <link href="https://fonts.googleapis.com/css?family=Poppins:600&display=swap" rel="stylesheet">
+   <link href="https://tresplazas.com/web/img/big_punto_de_venta.png" rel="shortcut icon">
+   <title>Inicio de sesión</title>
 </head>
+
 <body>
-  <h1>Destinos CRUD Interface</h1>
+   <img class="wave" src="/images/wave.png">
+   <div class="container">
+      <div class="img">
+         <img src="/images/pisac.jpg">
+      </div>
+      <div class="login-content">
+         <form id="login_form">
+            <img src="/images/avatar.svg">
+            <h2 class="title">BIENVENIDO</h2>
+            <div id="error-message" style="color: red; display: none;">Usuario o contraseña incorrecta</div>
+            <div class="input-div one">
+               <div class="i">
+                  <i class="fas fa-user"></i>
+               </div>
+               <div class="div">
+                  <input id="usuario" type="text" class="usuario" name="usuario" placeholder="Usuario">
+               </div>
+            </div>
+            <div class="input-div pass">
+               <div class="i">
+                  <i class="fas fa-lock"></i>
+               </div>
+               <div class="div">
+                  <input type="password" id="contrasena" class="contrasena" name="password" placeholder="Contraseña">
+               </div>
+            </div>
+            <div class="view">
+               <div class="fas fa-eye verPassword" onclick="vista()" id="verPassword"></div>
+            </div>
 
-  <button class="crud-button" onclick="openAddForm()">Añadir</button>
+            <div class="text-center">
+              <!--
+               <a class="font-italic isai5" href="">Olvidé mi contraseña</a>
+               <a class="font-italic isai5" href="registro">Registrarse</a>
+              -->
+            </div>
+            <input name="btningresar" class="btn" type="submit" value="INICIAR SESION">
+         </form>
+      </div>
+   </div>
+   <!--
+   <script src="js/fontawesome.js"></script>
+   <script src="js/main.js"></script>
+   <script src="js/main2.js"></script>
+   <script src="js/jquery.min.js"></script>
+   <script src="js/bootstrap.js"></script>
+   <script src="js/bootstrap.bundle.js"></script>
+  -->
 
-  <table>
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Nombre</th>
-        <th>Descripción</th>
-        <th>Ubicación</th>
-        <th>Atracciones Principales</th>
-        <th>Imágenes</th>
-        <th>Acciones</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% destinos.forEach(function(destino) { %>
-        <tr>
-          <td><%= destino.id %></td>
-          <td><%= destino.nombre_destino %></td>
-          <td><%= destino.descripcion %></td>
-          <td><%= destino.ubicacion %></td>
-          <td><%= destino.atracciones_principales %></td>
-          <td><%= destino.imagenes_destino %></td>
-          <td class="crud-buttons"> <!-- New cell for buttons -->
-            <button class="crud-button" onclick="editDestino(<%= destino.id %>)">Editar</button>
-            <button class="crud-button" onclick="deleteDestino(<%= destino.id %>)">Eliminar</button>
-          </td>
-        </tr>
-      <% }); %>
+   <script>
+    document.getElementById('login_form').addEventListener('submit', function(event) {
+      event.preventDefault();
+      validate(event);
+    });
+
+    function validate(event) {
+      console.log('validate function called');
       
-      
-      
-    </tbody>
-  </table>
-  
-  <!-- agregar -->
-  <div id="addModal" class="modal">
-    <div class="modal-content">
-      <span class="close" onclick="closeAddForm()">&times;</span>
-      <h2>Añadir Nuevo Destino</h2>
-      <form id="addForm" onsubmit="add(event)"> <!-- Call add(event) on form submission -->
-        <!-- Input fields for destination details -->
-        <label for="nombre">Nombre:</label>
-        <input type="text" id="nombre" name="nombre_destino" required><br><br>
-      
-        <label for="descripcion">Descripción:</label><br>
-        <textarea id="descripcion" name="descripcion" rows="4" cols="50" required></textarea><br><br>
-      
-        <label for="ubicacion">Ubicación:</label>
-        <input type="text" id="ubicacion" name="ubicacion" required><br><br>
-      
-        <label for="atracciones">Atracciones Principales:</label><br>
-        <textarea id="atracciones" name="atracciones_principales" rows="4" cols="50" required></textarea><br><br>
-      
-        <label for="imagenes">Imágenes:</label>
-        <input type="text" id="imagenes" name="imagenes_destino" required><br><br>
-      
-        <input type="submit" value="Añadir Destino">
-      </form>      
-    </div>
-  </div>
+      const formData = new FormData(document.getElementById('login_form'));
+      const jsonData = {};
+      formData.forEach((value, key) => { jsonData[key] = value });
 
-<script>
-  function openAddForm() {
-      document.getElementById('addModal').style.display = 'block';
-    }
-
-    function closeAddForm() {
-      document.getElementById('addModal').style.display = 'none';
-    }
-
-    function add(event) {
-    console.log('add function called');
-    event.preventDefault();
-
-    // Prepare form data
-    const formData = new FormData(document.getElementById('addForm'));
-
-    console.log('Form Data:');
-    for (let [key, value] of formData.entries()) {
-        console.log(key + ': ' + value);
-    }
-
-    // Convert formData to a query string
-    const queryString = new URLSearchParams(formData).toString();
-
-    fetch(`/add?${queryString}`, {
-        method: 'POST'
-    })
-
-    
-    .then(response => {
-        if (response.ok) {
-            console.log('Destination added successfully.');
-            closeAddForm();
-        } else {
-            // Log the response for debugging
-            console.error('Failed to add destination:', response);
-        }
-    })
-    .catch(error => console.error('Error:', error));
-}
-
-
-function editDestino(id) {
-  console.log("id: " + id);
-  fetch(`/updatepage/${id}`, { method: 'GET' })
-    .then(response => {
-      if (response.ok) {
-        console.log('Fetching data for update.');
-        // Redirect to update page after fetching data
-        window.location.href = `/updatepage/${id}`;
-      } else {
-        // Extract error message from response
-        response.text().then(errorMessage => {
-          console.error('Failed to fetch data for update:', errorMessage);
-        }).catch(error => {
-          console.error('Error:', error);
-        });
-      }
-    })
-    .catch(error => console.error('Error:', error));
-}
-
-
-  function deleteDestino(id) {
-    fetch(`/delete/${id}`, { method: 'DELETE' })
-      .then(response => {
-        if (response.ok) {
-          console.log('Destination deleted successfully.');
-        } else {
-          console.error('Failed to delete destination.');
-        }
+      console.log(jsonData);
+      fetch(`/validar_login`, {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(jsonData)
       })
-      .catch(error => console.error('Error:', error));
-  }
-</script>
-
+      .then(response => {
+          if (response.ok) {
+              console.log('Validation successful.');
+              window.location.href = `/display/destinos`;
+          } else {
+              return response.text().then(text => { throw new Error(text); });
+          }
+      })
+      .catch(error => {
+          console.error('Failed to validate:', error.message);
+          document.getElementById('error-message').style.display = 'block';
+      });
+    }
+   </script>
 </body>
+
 </html>
